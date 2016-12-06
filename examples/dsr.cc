@@ -77,10 +77,10 @@ main (int argc, char *argv[])
   NS_LOG_INFO ("creating the nodes");
 
   // General parameters
-  uint32_t nWifis = 5;
-  uint32_t nSinks = 1;
-  double TotalTime = 60.0;
-  double dataTime = 50.0;
+  uint32_t nWifis = 50;
+  uint32_t nSinks = 10;
+  double TotalTime = 600.0;
+  double dataTime = 500.0;
   double ppers = 1;
   uint32_t packetSize = 64;
   double dataStart = 100.0; // start sending data at 100s

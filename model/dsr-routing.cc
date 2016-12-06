@@ -485,12 +485,14 @@ void DsrRouting::Start ()
               routeCache->SetInitStability (m_initStability);
               routeCache->SetMinLifeTime (m_minLifeTime);
               routeCache->SetUseExtends (m_useExtends);
+			  /*
 			  NS_LOG_UNCOND("m_minLifeTime: "<<m_minLifeTime);
 			  NS_LOG_UNCOND("m_cacheType: "<<m_cacheType);
 			  NS_LOG_UNCOND("m_maxCacheLen: "<<m_maxCacheLen);
 			  NS_LOG_UNCOND("m_maxCacheTime: "<<m_maxCacheTime);
 			  NS_LOG_UNCOND("m_maxEntriesEachDst: "<<m_maxEntriesEachDst);
 			  NS_LOG_UNCOND("m_useExtends: " <<m_useExtends);
+			  */
               routeCache->ScheduleTimer ();
               // The call back to handle link error and send error message to appropriate nodes
               /// TODO whether this SendRerrWhenBreaksLinkToNextHop is used or not
@@ -930,7 +932,7 @@ void DsrRouting::CheckSendBuffer ()
 {
   NS_LOG_INFO (Simulator::Now ().GetSeconds ()
                << " Checking send buffer at " << m_mainAddress << " with size " << m_sendBuffer.GetSize ());
-
+	NS_LOG_UNCOND("CheckSendBuffer Called");
   for (std::vector<DsrSendBuffEntry>::iterator i = m_sendBuffer.GetBuffer ().begin (); i != m_sendBuffer.GetBuffer ().end (); )
     {
       NS_LOG_DEBUG ("Here we try to find the data packet in the send buffer");

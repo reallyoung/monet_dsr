@@ -188,7 +188,7 @@ DsrRouteCache::UpdateRouteEntry (Ipv4Address dst)
   else
     {
       std::list<DsrRouteCacheEntry> rtVector = i->second;
-      DsrRouteCacheEntry successEntry = rtVector.front ();
+      DsrRouteCacheEntry successEntry = rtVector.front ();//copy
       successEntry.SetExpireTime (RouteCacheTimeout);
       rtVector.pop_front ();
       rtVector.push_back (successEntry);
@@ -310,6 +310,7 @@ bool
 DsrRouteCache::IsLinkCache ()
 {
   NS_LOG_FUNCTION (this);
+ // NS_LOG_UNCOND("IsLinkCache Called");
   return m_isLinkCache;
 }
 
@@ -317,6 +318,7 @@ void
 DsrRouteCache::RebuildBestRouteTable (Ipv4Address source)
 {
   NS_LOG_FUNCTION (this << source);
+//  NS_LOG_UNCOND("RebuildBestRouteTable Called");
   /**
    * \brief The followings are initialize-single-source
    */
@@ -368,6 +370,7 @@ DsrRouteCache::RebuildBestRouteTable (Ipv4Address source)
           s[tempip] = true;
           for (std::map<Ipv4Address, uint32_t>::const_iterator k = m_netGraph[tempip].begin (); k != m_netGraph[tempip].end (); ++k)
             {
+		//		NS_LOG_UNCOND("k weight: "<<k->second);
               if (s.find (k->first) == s.end () && d[k->first] > d[tempip] + k->second)
                 {
                   d[k->first] = d[tempip] + k->second;
@@ -433,6 +436,7 @@ bool
 DsrRouteCache::LookupRoute_Link (Ipv4Address id, DsrRouteCacheEntry & rt)
 {
   NS_LOG_FUNCTION (this << id);
+ // NS_LOG_UNCOND("LookupRoute_Link Called");
   /// We need to purge the link node cache
   PurgeLinkNode ();
   std::map<Ipv4Address, DsrRouteCacheEntry::IP_VECTOR>::const_iterator i = m_bestRoutesTable_link.find (id);
@@ -500,12 +504,22 @@ void
 DsrRouteCache::UpdateNetGraph ()
 {
   NS_LOG_FUNCTION (this);
+ // NS_LOG_UNCOND("UpdateNetGraph Called");
   m_netGraph.clear ();
   for (std::map<Link, DsrLinkStab>::iterator i = m_linkCache.begin (); i != m_linkCache.end (); ++i)
     {
       // Here the weight is set as 1
       /// \todo May need to set different weight for different link here later
-      uint32_t weight = 1;
+	  uint32_t tt = (uint32_t)i->second.GetLinkStability().GetSeconds();
+//	  NS_LOG_UNCOND("stab GetLinkStability: "<< tt);
+//	  NS_LOG_UNCOND("m_linkStability: "<< m_initStability);
+      uint32_t weight = 3;
+	  //threashold value
+	 uint32_t th = (uint32_t) m_useExtends.GetSeconds() -
+		 (uint32_t)m_initStability.GetSeconds();
+	 //if link is recently used then decrease weight 
+	 if(tt>th)
+		  weight = 2;
       m_netGraph[i->first.m_low][i->first.m_high] = weight;
       m_netGraph[i->first.m_high][i->first.m_low] = weight;
     }

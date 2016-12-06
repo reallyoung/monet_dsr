@@ -87,6 +87,7 @@ struct Link
 {
   Ipv4Address m_low;
   Ipv4Address m_high;
+  uint32_t weight;
   Link (Ipv4Address ip1, Ipv4Address ip2)
   {
     if (ip1 < ip2)
@@ -99,6 +100,7 @@ struct Link
         m_low = ip2;
         m_high = ip1;
       }
+	weight =3;
   }
   bool operator < (Link const& L) const
   {
